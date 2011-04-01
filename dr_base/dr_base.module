@@ -52,8 +52,8 @@ function dr_base_theme($existing, $type, $theme, $path) {
     'arguments' => array('vars' => array())
   );
   return array(
-    'dr_base_team_progress_thermometer' => array(
-      'template' => 'dr-base-team-progress-thermometer',
+    'dr_base_thermometer' => array(
+      'template' => 'dr-base-thermometer',
     ) + $base,
     'dr_base_team_progress_stats' => array(
       'template' => 'dr-base-team-progress-stats',
@@ -352,7 +352,7 @@ function dr_base_block($op = 'list', $delta = 0, $edit = array()) {
       }
       
       $theme_functions = array(
-        0 => 'dr_base_team_progress_thermometer',
+        0 => 'dr_base_thermometer',
         2 => 'dr_base_team_leaderboard_button',
         3 => 'dr_base_team_progress_stats',
         4 => 'dr_base_team_page_button',
@@ -378,9 +378,9 @@ function dr_base_views_api() {
 }
 
 /**
- * Preprocess thermometer vars for theming
+ * Preprocess thermometer vars for theming.
  */
-function dr_base_preprocess_dr_base_team_progress_thermometer(&$variables) {
+function template_preprocess_dr_base_thermometer(&$variables) {
   $vars = $variables['vars'];
   unset($variables['vars']);
   if ($vars['total_raw_goal'] == 0.0) {
@@ -510,7 +510,7 @@ function _dr_base_block_site_thermometer() {
   $vars['total_raw_view'] = _dr_base_format_value($total);
 
   $vars['edit_link'] = user_access('administer donor rally') ? l('Change campaign goal', 'admin/settings/dr-base', array('query' => drupal_get_destination())) : '';
-  return theme('dr_base_team_progress_thermometer', $vars);
+  return theme('dr_base_thermometer', $vars);
 }
 
 /**
