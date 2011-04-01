@@ -23,3 +23,24 @@ function dr_campaign_block($op = 'view', $delta = 0, $edit = array()) {
       }
   }
 }
+
+/**
+ * Get a campaign's total goal.
+ *
+ * @param $node
+ *   Campaign node object.
+ */
+function dr_campaign_get_goal($node) {
+  return $node->field_campaign_goal[0]['value'];
+}
+
+/**
+ * Get a campaign's total progress towards the goal.
+ *
+ * @param $node
+ *   Campaign node object.
+ */
+function dr_campaign_get_total($node) {
+  // TODO
+  return 77;
+}
