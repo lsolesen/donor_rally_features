@@ -1,0 +1,3 @@
+<?php
+
+include_once('dr_campaign.features.inc');
