@@ -14,7 +14,7 @@ function dr_campaign_spaces_presets() {
   $spaces_presets->space_type = 'og';
   $spaces_presets->value = array(
     'variable' => array(
-      'spaces_og_selective' => '0',
+      'spaces_og_selective' => '3',
       'spaces_og_register' => 0,
       'spaces_og_directory' => 1,
       'spaces_og_private' => 0,
