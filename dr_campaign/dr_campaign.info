@@ -1,6 +1,6 @@
 core = "6.x"
-dependencies[] = "dr_base"
 dependencies[] = "context"
+dependencies[] = "dr_base"
 dependencies[] = "features"
 dependencies[] = "number"
 dependencies[] = "og"
