@@ -1,3 +1,25 @@
 <?php
-
+/**
+ * @file
+ * Donor Rally Campaign feature.
+ */
 include_once('dr_campaign.features.inc');
+
+/**
+ * Implementation of hook_block().
+ */
+function dr_campaign_block($op = 'view', $delta = 0, $edit = array()) {
+  switch ($op) {
+    case 'list':
+      $blocks['campaign_thermometer']['info'] = t('Campaign thermometer');
+      $blocks['campaign_thermometer']['cache'] = BLOCK_NO_CACHE;
+      return $blocks;
+
+    case 'view':
+      module_load_include('inc', 'dr_campaign', 'dr_campaign.block');
+      $function = '_dr_campaign_block_' . $delta;
+      if (function_exists($function)) {
+        return $function();
+      }
+  }
+}
