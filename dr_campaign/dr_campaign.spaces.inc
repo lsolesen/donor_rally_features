@@ -14,10 +14,29 @@ function dr_campaign_spaces_presets() {
   $spaces_presets->space_type = 'og';
   $spaces_presets->value = array(
     'variable' => array(
+      'site_frontpage' => 'rally',
       'spaces_og_selective' => '3',
       'spaces_og_register' => 0,
       'spaces_og_directory' => 1,
       'spaces_og_private' => 0,
+    ),
+    'context' => array(
+      'dr_campaign-landing_page:reaction:block' => array(
+        'blocks' => array(
+          'dr_campaign-campaign_thermometer' => array(
+            'module' => 'dr_campaign',
+            'delta' => 'campaign_thermometer',
+            'region' => 'sidebar_second',
+            'weight' => 0,
+          ),
+          'views-dr_campaign_data-block_1' => array(
+            'module' => 'views',
+            'delta' => 'dr_campaign_data-block_1',
+            'region' => 'highlight',
+            'weight' => 0,
+          ),
+        ),
+      ),
     ),
   );
 
