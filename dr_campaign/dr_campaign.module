@@ -6,6 +6,21 @@
 include_once('dr_campaign.features.inc');
 
 /**
+ * Implementation of hook_menu().
+ */
+function dr_campaign_menu() {
+  $items['rally'] = array(
+    'title' => 'donate',
+    'title callback' => 'dr_campaign_title',
+    'access arguments' => array('access content'),
+    'page callback' => 'dr_campaign_landing_page',
+    'page arguments' => array(),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  return $items;
+}
+
+/**
  * Implementation of hook_block().
  */
 function dr_campaign_block($op = 'view', $delta = 0, $edit = array()) {
@@ -43,4 +58,25 @@ function dr_campaign_get_goal($node) {
 function dr_campaign_get_total($node) {
   // TODO
   return 77;
+}
+
+/**
+ * Page callback for a campaign's landing page.
+ */
+function dr_campaign_landing_page() {
+  $context = context_load('dr_campaign-landing_page');
+  if (!$context) {
+    $context = ctools_export_new_object('context');
+    $context->name = 'dr_campaign-landing_page';
+    $context->description = 'Campaign landing page';
+    $context->tag = 'donor rally campaign';
+    context_save($context);
+  }
+  context_set('spaces', 'rally', 'dr_campaign-landing_page');
+  context_set('context', 'dr_campaign-landing_page', $context);
+  return '';
+}
+
+function dr_campaign_title() {
+  return 'TODO';
 }
