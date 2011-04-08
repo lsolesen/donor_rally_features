@@ -35,3 +35,12 @@ function dr_campaign_node_info() {
   );
   return $items;
 }
+
+/**
+ * Implementation of hook_views_api().
+ */
+function dr_campaign_views_api() {
+  return array(
+    'api' => '2',
+  );
+}
