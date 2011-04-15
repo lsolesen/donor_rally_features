@@ -78,5 +78,6 @@ function dr_campaign_landing_page() {
 }
 
 function dr_campaign_title() {
-  return 'TODO';
+  $space = spaces_get_space();
+  return $space->group->title;
 }
