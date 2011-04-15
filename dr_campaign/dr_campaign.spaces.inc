@@ -32,8 +32,8 @@ function dr_campaign_spaces_presets() {
           'views-dr_campaign_data-block_1' => array(
             'module' => 'views',
             'delta' => 'dr_campaign_data-block_1',
-            'region' => 'highlight',
-            'weight' => 0,
+            'region' => 'content_top',
+            'weight' => 10,
           ),
         ),
       ),
