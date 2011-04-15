@@ -8,10 +8,13 @@
  * Campaign thermometer block.
  */
 function _dr_campaign_block_campaign_thermometer() {
-  if (!($node = menu_get_object()) && $node->type != 'campaign') {
+  $space = spaces_get_space();
+  if (!($space->type == 'og' && $space->group->type == 'campaign')) {
     // Must be a campaign node.
     return;
   }
+  $node = $space->group;
+
   $goal = dr_campaign_get_goal($node);
   $vars['total_raw_goal'] = $goal;
   $vars['total_raw_goal_view'] = _dr_base_format_value($goal);
