@@ -30,3 +30,13 @@ function _dr_campaign_block_campaign_thermometer() {
     'content' => theme('dr_base_thermometer', $vars),
   );
 }
+
+/**
+ * Layout editor block.
+ */
+function _dr_campaign_block_layout_editor() {
+  return array(
+    'subject' => '',
+    'content' => 'TODO',
+  );
+}
