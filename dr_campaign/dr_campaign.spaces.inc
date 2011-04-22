@@ -14,14 +14,21 @@ function dr_campaign_spaces_presets() {
   $spaces_presets->space_type = 'og';
   $spaces_presets->value = array(
     'variable' => array(
-      'site_frontpage' => 'rally',
+      'site_frontpage' => 'dashboard',
+      'spaces_dashboard_custom' => array(
+        'custom-1' => 'Dashboard',
+      ),
+      'spaces_features' => array(
+        'spaces_dashboard' => '1',
+      ),
+      'spaces_setting_home' => 'dashboard',
       'spaces_og_selective' => '3',
       'spaces_og_register' => 0,
       'spaces_og_directory' => 1,
       'spaces_og_private' => 0,
     ),
     'context' => array(
-      'dr_campaign-landing_page:reaction:block' => array(
+      'spaces_dashboard-custom-1:reaction:block' => array(
         'blocks' => array(
           'dr_campaign-campaign_thermometer' => array(
             'module' => 'dr_campaign',

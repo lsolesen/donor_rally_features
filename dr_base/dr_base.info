@@ -1,13 +1,16 @@
-; $Id$
-name = Donor Rally
-description = Donor Rally competitive donation
-dependencies[] = views_or
-dependencies[] = content_profile
-package = Donor Rally
-core = 6.x
-php = 5.0
-
-project = donor_rally_features
+core = "6.x"
+dependencies[] = "content_profile"
+dependencies[] = "ctools"
+dependencies[] = "spaces_dashboard"
+dependencies[] = "strongarm"
+description = "Donor Rally competitive donation"
+features[context][] = "dr_base_dashboard"
+features[ctools][] = "context:context:3"
+features[ctools][] = "strongarm:strongarm:1"
+features[variable][] = "spaces_features"
+name = "Donor Rally"
+package = "Donor Rally"
+php = "5.0"
+project = "donor_rally_features"
 project status url = "http://code.opensourcery.com/fserver"
 version = "6.x-1.0-alpha1"
-

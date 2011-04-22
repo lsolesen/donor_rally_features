@@ -1,30 +1,29 @@
 <?php
-
 /**
  * Implementation of hook_context_default_contexts().
  */
-function dr_campaign_context_default_contexts() {
+function dr_base_context_default_contexts() {
   $export = array();
   $context = new stdClass;
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
-  $context->name = 'dr_campaign';
+  $context->name = 'dr_base_dashboard';
   $context->description = 'Layout editor';
-  $context->tag = 'donor rally campaign';
+  $context->tag = 'donor rally';
   $context->conditions = array(
     'path' => array(
       'values' => array(
-        'rally' => 'rally',
-        'rally/*' => 'rally/*',
+        'dashboard' => 'dashboard',
+        'dashboard/*' => 'dashboard/*',
       ),
     ),
   );
   $context->reactions = array(
     'block' => array(
       'blocks' => array(
-        'dr_campaign-layout_editor' => array(
-          'module' => 'dr_campaign',
-          'delta' => 'layout_editor',
+        'spaces_dashboard-editor' => array(
+          'module' => 'spaces_dashboard',
+          'delta' => 'editor',
           'region' => 'content_top',
           'weight' => 0,
         ),

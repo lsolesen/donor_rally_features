@@ -1,12 +1,11 @@
 <?php
-
-// $Id$
-
 /**
  * @file
- * Donor Rally module. Allows teams/groups to "compete" in fundraising campaigns.
+ * Donor Rally module. Allows teams/groups to "compete" in fundraising
+ * campaigns.
  * See README.txt for more information.
  */
+include_once('dr_base.features.inc');
 
 /**
  * Team content type.
