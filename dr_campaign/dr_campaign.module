@@ -13,9 +13,6 @@ function dr_campaign_block($op = 'view', $delta = 0, $edit = array()) {
     case 'list':
       $blocks['campaign_thermometer']['info'] = t('Campaign thermometer');
       $blocks['campaign_thermometer']['cache'] = BLOCK_NO_CACHE;
-
-      $blocks['layout_editor']['info'] = t('Layout editor');
-      $blocks['layout_editor']['cache'] = BLOCK_NO_CACHE;
       return $blocks;
 
     case 'view':
