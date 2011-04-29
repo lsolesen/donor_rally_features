@@ -35,8 +35,8 @@ function dr_base_context_default_contexts() {
   // Translatables
   // Included for use with string extractors like potx.
   t('Layout editor');
-  t('donor rally campaign');
+  t('donor rally');
 
-  $export['dr_campaign'] = $context;
+  $export['dr_base_dashboard'] = $context;
   return $export;
 }
