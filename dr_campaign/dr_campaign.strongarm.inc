@@ -11,17 +11,17 @@ function dr_campaign_strongarm() {
   $strongarm->name = 'content_extra_weights_campaign';
   $strongarm->value = array(
     'title' => '-5',
-    'body_field' => '2',
-    'revision_information' => '5',
-    'author' => '4',
-    'options' => '6',
-    'menu' => '-2',
-    'path' => '7',
-    'og_description' => '-3',
-    'og_selective' => '1',
-    'og_register' => '3',
-    'og_directory' => '0',
-    'og_private' => '-1',
+    'body_field' => '3',
+    'revision_information' => '6',
+    'author' => '5',
+    'options' => '7',
+    'menu' => '-1',
+    'path' => '8',
+    'og_description' => '-2',
+    'og_selective' => '2',
+    'og_register' => '4',
+    'og_directory' => '1',
+    'og_private' => '0',
   );
 
   $export['content_extra_weights_campaign'] = $strongarm;

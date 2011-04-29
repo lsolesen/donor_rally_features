@@ -272,7 +272,9 @@ if ($space->type = \'og\') {
     ),
   ));
   $handler->override_option('access', array(
-    'type' => 'none',
+    'type' => 'spaces_feature',
+    'spaces_feature' => 'dr_campaign',
+    'perm' => '',
   ));
   $handler->override_option('cache', array(
     'type' => 'none',
@@ -307,6 +309,52 @@ if ($space->type = \'og\') {
       'id' => 'body',
       'table' => 'node_revisions',
       'field' => 'body',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+    ),
+  ));
+  $handler->override_option('block_description', '');
+  $handler->override_option('block_caching', -1);
+  $handler = $view->new_display('block', 'Logo/image', 'block_2');
+  $handler->override_option('fields', array(
+    'field_campaign_image_fid' => array(
+      'label' => '',
+      'alter' => array(
+        'alter_text' => 0,
+        'text' => '',
+        'make_link' => 0,
+        'path' => '',
+        'link_class' => '',
+        'alt' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'target' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'html' => 0,
+        'strip_tags' => 0,
+      ),
+      'empty' => '',
+      'hide_empty' => 0,
+      'empty_zero' => 0,
+      'link_to_node' => 0,
+      'label_type' => 'none',
+      'format' => 'image_plain',
+      'multiple' => array(
+        'group' => TRUE,
+        'multiple_number' => '',
+        'multiple_from' => '',
+        'multiple_reversed' => FALSE,
+      ),
+      'exclude' => 0,
+      'id' => 'field_campaign_image_fid',
+      'table' => 'node_data_field_campaign_image',
+      'field' => 'field_campaign_image_fid',
       'override' => array(
         'button' => 'Use default',
       ),
