@@ -130,27 +130,15 @@ function dr_campaign_views_default_views() {
     'type' => 'none',
   ));
   $handler->override_option('items_per_page', 27);
+  $handler->override_option('distinct', 1);
   $handler->override_option('style_plugin', 'list');
   $handler->override_option('style_options', array(
     'grouping' => '',
     'type' => 'ul',
   ));
-  $handler = $view->new_display('page', 'Campaign page', 'page_1');
-  $handler->override_option('path', 'campaigns');
-  $handler->override_option('menu', array(
-    'type' => 'none',
-    'title' => '',
-    'description' => '',
-    'weight' => 0,
-    'name' => 'navigation',
-  ));
-  $handler->override_option('tab_options', array(
-    'type' => 'none',
-    'title' => '',
-    'description' => '',
-    'weight' => 0,
-    'name' => 'navigation',
-  ));
+  $handler = $view->new_display('block', 'Active campaigns', 'block_1');
+  $handler->override_option('block_description', '');
+  $handler->override_option('block_caching', -1);
 
   $views[$view->name] = $view;
 
