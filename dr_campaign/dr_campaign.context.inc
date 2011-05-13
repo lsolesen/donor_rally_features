@@ -1,10 +1,15 @@
 <?php
+/**
+ * @file
+ * dr_campaign.context.inc
+ */
 
 /**
  * Implementation of hook_context_default_contexts().
  */
 function dr_campaign_context_default_contexts() {
   $export = array();
+
   $context = new stdClass;
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
@@ -29,7 +34,7 @@ function dr_campaign_context_default_contexts() {
   // Translatables
   // Included for use with string extractors like potx.
   t('Dashboard');
-
   $export['spaces_dashboard-custom-1'] = $context;
+
   return $export;
 }
