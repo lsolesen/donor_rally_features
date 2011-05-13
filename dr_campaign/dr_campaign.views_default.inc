@@ -31,6 +31,14 @@ function dr_campaign_views_default_views() {
   $handler->display->display_options['pager']['options']['items_per_page'] = 27;
   $handler->display->display_options['style_plugin'] = 'list';
   $handler->display->display_options['row_plugin'] = 'fields';
+  /* No results behavior: Global: Text area */
+  $handler->display->display_options['empty']['area']['id'] = 'area';
+  $handler->display->display_options['empty']['area']['table'] = 'views';
+  $handler->display->display_options['empty']['area']['field'] = 'area';
+  $handler->display->display_options['empty']['area']['label'] = 'Empty test';
+  $handler->display->display_options['empty']['area']['empty'] = FALSE;
+  $handler->display->display_options['empty']['area']['content'] = 'No active campaigns';
+  $handler->display->display_options['empty']['area']['format'] = 'filtered_html';
   /* Field: Content: Title */
   $handler->display->display_options['fields']['title']['id'] = 'title';
   $handler->display->display_options['fields']['title']['table'] = 'node';
@@ -101,6 +109,8 @@ function dr_campaign_views_default_views() {
     t('Sort by'),
     t('Asc'),
     t('Desc'),
+    t('Empty test'),
+    t('No active campaigns'),
     t('Active campaigns'),
   );
   $export['dr_campaign'] = $view;
