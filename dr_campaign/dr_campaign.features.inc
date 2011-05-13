@@ -1,4 +1,8 @@
 <?php
+/**
+ * @file
+ * dr_campaign.features.inc
+ */
 
 /**
  * Implementation of hook_ctools_plugin_api().
@@ -8,11 +12,23 @@ function dr_campaign_ctools_plugin_api() {
   if ($module == "context" && $api == "context") {
     return array("version" => 3);
   }
-  elseif ($module == "spaces" && $api == "spaces") {
+  list($module, $api) = func_get_args();
+  if ($module == "spaces" && $api == "spaces") {
     return array("version" => 3);
   }
-  elseif ($module == "strongarm" && $api == "strongarm") {
+  list($module, $api) = func_get_args();
+  if ($module == "strongarm" && $api == "strongarm") {
     return array("version" => 1);
+  }
+}
+
+/**
+ * Implementation of hook_views_api().
+ */
+function dr_campaign_views_api() {
+  list($module, $api) = func_get_args();
+  if ($module == "views" && $api == "views_default") {
+    return array("version" => 3.0);
   }
 }
 
@@ -23,24 +39,12 @@ function dr_campaign_node_info() {
   $items = array(
     'campaign' => array(
       'name' => t('Campaign'),
-      'module' => 'features',
       'description' => t('TODO good description of what a campaign is'),
+      'base' => 'node_content',
       'has_title' => '1',
       'title_label' => t('Campaign name'),
-      'has_body' => '1',
-      'body_label' => t('Description'),
-      'min_word_count' => '0',
       'help' => '',
     ),
   );
   return $items;
-}
-
-/**
- * Implementation of hook_views_api().
- */
-function dr_campaign_views_api() {
-  return array(
-    'api' => '2',
-  );
 }
