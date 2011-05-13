@@ -1,5 +1,4 @@
-core = "6.x"
-dependencies[] = "content_profile"
+core = "7.x"
 dependencies[] = "ctools"
 dependencies[] = "spaces_dashboard"
 dependencies[] = "strongarm"
