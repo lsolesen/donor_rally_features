@@ -50,20 +50,33 @@ function dr_campaign_views_default_views() {
     'type' => 'spaces_og',
     'frontpage' => 1,
   );
-  /* Field: Broken/missing handler */
-  $handler->display->display_options['fields']['field_campaign_goal_value']['id'] = 'field_campaign_goal_value';
-  $handler->display->display_options['fields']['field_campaign_goal_value']['table'] = 'node_data_field_campaign_goal';
-  $handler->display->display_options['fields']['field_campaign_goal_value']['field'] = 'field_campaign_goal_value';
-  $handler->display->display_options['fields']['field_campaign_goal_value']['label'] = '';
-  $handler->display->display_options['fields']['field_campaign_goal_value']['alter']['alter_text'] = 0;
-  $handler->display->display_options['fields']['field_campaign_goal_value']['alter']['make_link'] = 0;
-  $handler->display->display_options['fields']['field_campaign_goal_value']['alter']['trim'] = 0;
-  $handler->display->display_options['fields']['field_campaign_goal_value']['alter']['word_boundary'] = 1;
-  $handler->display->display_options['fields']['field_campaign_goal_value']['alter']['ellipsis'] = 1;
-  $handler->display->display_options['fields']['field_campaign_goal_value']['alter']['strip_tags'] = 0;
-  $handler->display->display_options['fields']['field_campaign_goal_value']['alter']['html'] = 0;
-  $handler->display->display_options['fields']['field_campaign_goal_value']['hide_empty'] = 0;
-  $handler->display->display_options['fields']['field_campaign_goal_value']['empty_zero'] = 0;
+  /* Field: Content: Campaign goal */
+  $handler->display->display_options['fields']['field_campaign_goal']['id'] = 'field_campaign_goal';
+  $handler->display->display_options['fields']['field_campaign_goal']['table'] = 'field_data_field_campaign_goal';
+  $handler->display->display_options['fields']['field_campaign_goal']['field'] = 'field_campaign_goal';
+  $handler->display->display_options['fields']['field_campaign_goal']['label'] = '';
+  $handler->display->display_options['fields']['field_campaign_goal']['alter']['alter_text'] = 0;
+  $handler->display->display_options['fields']['field_campaign_goal']['alter']['make_link'] = 0;
+  $handler->display->display_options['fields']['field_campaign_goal']['alter']['absolute'] = 0;
+  $handler->display->display_options['fields']['field_campaign_goal']['alter']['external'] = 0;
+  $handler->display->display_options['fields']['field_campaign_goal']['alter']['replace_spaces'] = 0;
+  $handler->display->display_options['fields']['field_campaign_goal']['alter']['trim'] = 0;
+  $handler->display->display_options['fields']['field_campaign_goal']['alter']['nl2br'] = 0;
+  $handler->display->display_options['fields']['field_campaign_goal']['alter']['word_boundary'] = 1;
+  $handler->display->display_options['fields']['field_campaign_goal']['alter']['ellipsis'] = 1;
+  $handler->display->display_options['fields']['field_campaign_goal']['alter']['strip_tags'] = 0;
+  $handler->display->display_options['fields']['field_campaign_goal']['alter']['html'] = 0;
+  $handler->display->display_options['fields']['field_campaign_goal']['element_label_colon'] = 0;
+  $handler->display->display_options['fields']['field_campaign_goal']['element_default_classes'] = 1;
+  $handler->display->display_options['fields']['field_campaign_goal']['hide_empty'] = 0;
+  $handler->display->display_options['fields']['field_campaign_goal']['empty_zero'] = 0;
+  $handler->display->display_options['fields']['field_campaign_goal']['settings'] = array(
+    'thousand_separator' => ',',
+    'decimal_separator' => '.',
+    'scale' => '2',
+    'prefix_suffix' => 1,
+  );
+  $handler->display->display_options['fields']['field_campaign_goal']['field_api_classes'] = 0;
   /* Filter criterion: Content: Type */
   $handler->display->display_options['filters']['type']['id'] = 'type';
   $handler->display->display_options['filters']['type']['table'] = 'node';
@@ -79,7 +92,7 @@ function dr_campaign_views_default_views() {
   $handler->display->display_options['filters']['status_extra']['expose']['operator'] = FALSE;
 
   /* Display: Active campaigns */
-  $handler = $view->new_display('block', 'Active campaigns', 'block_1');
+  $handler = $view->new_display('block', 'Active campaigns', 'active_campaigns');
   $translatables['dr_campaign'] = array(
     t('Defaults'),
     t('more'),
