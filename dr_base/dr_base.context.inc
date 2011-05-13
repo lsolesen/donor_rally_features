@@ -30,8 +30,8 @@ function dr_base_context_default_contexts() {
         'spaces_dashboard-editor' => array(
           'module' => 'spaces_dashboard',
           'delta' => 'editor',
-          'region' => 'content_top',
-          'weight' => 0,
+          'region' => 'content',
+          'weight' => -10,
         ),
       ),
     ),
