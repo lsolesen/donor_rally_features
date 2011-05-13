@@ -1,4 +1,8 @@
 <?php
+/**
+ * @file
+ * dr_base.features.inc
+ */
 
 /**
  * Implementation of hook_ctools_plugin_api().
@@ -8,7 +12,8 @@ function dr_base_ctools_plugin_api() {
   if ($module == "context" && $api == "context") {
     return array("version" => 3);
   }
-  elseif ($module == "strongarm" && $api == "strongarm") {
+  list($module, $api) = func_get_args();
+  if ($module == "strongarm" && $api == "strongarm") {
     return array("version" => 1);
   }
 }
