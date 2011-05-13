@@ -39,8 +39,8 @@ function dr_campaign_node_info() {
   $items = array(
     'campaign' => array(
       'name' => t('Campaign'),
-      'description' => t('TODO good description of what a campaign is'),
       'base' => 'node_content',
+      'description' => t('TODO good description of what a campaign is'),
       'has_title' => '1',
       'title_label' => t('Campaign name'),
       'help' => '',
