@@ -55,18 +55,11 @@ function dr_base_theme($existing, $type, $theme, $path) {
   $base = array(
     'arguments' => array('vars' => array()),
   );
+  // TODO make better arguments.
   return array(
     'dr_base_thermometer' => array(
       'template' => 'dr-base-thermometer',
     ) + $base,
-    'dr_base_team_progress_stats' => array(
-      'template' => 'dr-base-team-progress-stats',
-    ) + $base,
-    'dr_base_team_leaderboard_button' => $base,
-    'dr_base_team_page_button' => $base,
-    'dr_base_new_blog_post_button' => $base,
-    'dr_base_team_coordinator_login_button' => $base,
-    'dr_base_team_coordinator_account_button' => $base,
   );
 }
 
@@ -288,123 +281,6 @@ function dr_base_init() {
 }
 
 /**
- * Implements hook_block_info().
- */
-function dr_base_block_info() {
-  return array(
-    0 => array(
-      'info' => t('Team Progress Thermometer'),
-      'cache' => BLOCK_NO_CACHE,
-    ),
-    1 => array(
-      'info' => t('Donate Button'),
-      'cache' => BLOCK_CACHE_PER_PAGE,
-    ),
-    2 => array(
-      'info' => t('Leaderboard Button'),
-      'cache' => BLOCK_CACHE_GLOBAL,
-    ),
-    3 => array(
-      'info' => t('Team Progress Statistics'),
-      'cache' => BLOCK_NO_CACHE,
-    ),
-    4 => array(
-      'info' => t('Team Page Button'),
-      'cache' => BLOCK_CACHE_PER_PAGE,
-    ),
-    5 => array(
-      'info' => t('New Team Blog Post'),
-      'cache' => BLOCK_CACHE_PER_PAGE,
-    ),
-    6 => array(
-      'info' => t('Team Coordinator Log in Button'),
-      'cache' => BLOCK_CACHE_GLOBAL,
-    ),
-    7 => array(
-      'info' => t('Team Coordinator Dashboard Button'),
-      'cache' => BLOCK_NO_CACHE,
-    ),
-    'site_thermometer' => array(
-      'info' => t('Site-wide total/goal thermometer'),
-      'cache' => BLOCK_CACHE_GLOBAL,
-    ),
-    'team_links' => array(
-      'info' => t('Donor Rally Team/Account links'),
-      'cache' => BLOCK_CACHE_PER_USER,
-    ),
-  );
-}
-
-/**
- * Implements hook_block_configure().
- */
-function dr_base_block_configure($delta) {
-  return array();
-}
-
-/**
- * Implements hook_block_view().
- */
-function dr_base_block_view($delta) {
-  if ($delta === 'site_thermometer') {
-    return array(
-      'subject' => '',
-      'content' => _dr_base_block_site_thermometer(),
-    );
-  }
-  elseif ($delta === 'team_links') {
-    return array(
-      'subject' => '',
-      'content' => _dr_base_block_team_links(),
-    );
-  }
-
-  if (!$node) {
-    $node = menu_get_object();
-    if ($node && $node->type != DONOR_RALLY_CONTENT_PROFILE_TYPE) {
-      $node = NULL;
-    }
-  }
-
-  $vars = array();
-  if ($node) {
-    $vars = dr_base_team_stats($node);
-    $vars['node'] = $node;
-  }
-
-  if ($delta === 1 ) {
-    // Allow payment gateway to set the button.
-    $button = module_invoke(variable_get('dr_base_payment_gateway', 'dr_base_salsa'), 'donor_rally_donate_button', $vars);
-    return array(
-      'subject' => '',
-      'content' => $button,
-    );
-  }
-
-  $theme_functions = array(
-    0 => 'dr_base_thermometer',
-    2 => 'dr_base_team_leaderboard_button',
-    3 => 'dr_base_team_progress_stats',
-    4 => 'dr_base_team_page_button',
-    5 => 'dr_base_new_blog_post_button',
-    6 => 'dr_base_team_coordinator_login_button',
-    7 => 'dr_base_team_coordinator_account_button',
-  );
-  if (isset($theme_functions[$delta])) {
-    // TODO Please change this theme call to use an associative array for the $variables parameter.
-    return array('subject' => '', 'content' => theme($theme_functions[$delta], $vars));
-  }
-}
-
-/**
- * Implements hook_block().
- */
-function dr_base_block_OLD($op = 'list', $delta = 0, $edit = array()) {
-  // TODO Remaining code in this function needs to be moved to the appropriate new hook function.
-  return array('subject' => '', 'content' => '');
-}
-
-/**
  * Implements hook_views_api().
  */
 function dr_base_views_api() {
@@ -481,84 +357,6 @@ function dr_base_preprocess_dr_base_team_progress_stats(&$variables) {
   if (count($variables['categories']) > 1) {
     $variables['categories']['total']['label'] = t('Total points');
   }
-}
-
-/**
- * Helper that constructs button markup.
- */
-function dr_base_theme_button($class, $text, $link, $attr = array()) {
-  return l($text, $link, array('html' => TRUE, 'attributes' => array('class' => 'dr-base-button ' . $class) + $attr));
-}
-
-/**
- * Theme the "leaderboard" button block
- */
-function theme_dr_base_team_leaderboard_button($variables) {
-  $vars = $variables['vars'];
-  return dr_base_theme_button(
-    'dr-base-leaderboard-button',
-    t('Team Ranking'),
-    'leaderboard'
-  );
-}
-
-/**
- * Theme the "team page" button block
- */
-function theme_dr_base_team_page_button($variables) {
-  $vars = $variables['vars'];
-  return dr_base_theme_button(
-    'dr-base-team-page-button',
-    t('Team Page'),
-    'node/' . $vars['node']->nid
-  );
-}
-
-/**
- * Theme the "new blog post" button block
- */
-function theme_dr_base_new_blog_post_button($variables) {
-  $vars = $variables['vars'];
-  if (user_access('create team_blog_post content')) {
-    return '<div class="dr-base-new-blog-post-button">' .
-      l(t('Write a new blog post'), 'node/add/team-blog-post') .
-      '</div>';
-  }
-  return '';
-}
-
-/**
- * Theme the "Team coordinator login" button block
- */
-function theme_dr_base_team_coordinator_login_button($variables) {
-  $vars = $variables['vars'];
-  global $user;
-  if ($user->uid != 0) {
-    return;
-  }
-
-  return dr_base_theme_button(
-    'dr-base-team-coordinator-login-button',
-    t('Team Coordinator Login'),
-    'user/login'
-  );
-}
-
-/**
- * Theme the "Team coordinator account/dashboard" button block
- */
-function theme_dr_base_team_coordinator_account_button($variables) {
-  $vars = $variables['vars'];
-  global $user;
-  if (!isset($vars['node']) || $vars['node']->uid != $user->uid) {
-    return;
-  }
-
-  return dr_base_theme_button(
-    'dr-base-team-coordinator-account-button',
-    t('Team Dashboard'),
-    'user'
-  );
 }
 
 /**
