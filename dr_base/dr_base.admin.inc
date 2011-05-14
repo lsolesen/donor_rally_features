@@ -10,12 +10,12 @@
 /**
  * Global competitive drive settings
  */
-function dr_base_settings_form($form_state) {
+function dr_base_settings_form($form, $form_state) {
   $form = array();
 
   $options = module_invoke_all('dr_base_payment_gateway');
   if (empty($options)) {
-    drupal_set_message(t('No payment gateways found. Payment gateways can be enabled on the <a href="!url">modules page</a>.', array('!url' => url('admin/build/modules'))), 'error');
+    drupal_set_message(t('No payment gateways found. Payment gateways can be enabled on the <a href="!url">modules page</a>.', array('!url' => url('admin/modules'))), 'error');
   }
   else {
     $form['payment_gateway'] = array(
@@ -23,7 +23,7 @@ function dr_base_settings_form($form_state) {
       '#type' => 'select',
       '#required' => TRUE,
       '#options' => $options,
-      '#description' => t('Select payment gateway to use. Gateways can be enabled on the <a href="!url">modules page</a>.', array('!url' => url('admin/build/modules'))),
+      '#description' => t('Select payment gateway to use. Gateways can be enabled on the <a href="!url">modules page</a>.', array('!url' => url('admin/modules'))),
       '#default_value' => variable_get('dr_base_payment_gateway', ''),
     );
   }
@@ -71,7 +71,7 @@ function dr_base_settings_form($form_state) {
 function dr_base_settings_form_validate($form, &$form_state) {
   // TODO abstract this out to dr_base_inkind module.
   foreach (array('cash', 'food', 'volunteer') as $element) {
-    if ((float)$form_state['values'][$element] < 0.0) {
+    if ((float) $form_state['values'][$element] < 0.0) {
       form_set_error($element, t('%element must be greater than or equal to zero.', array('%element' => $form['point_scales'][$element]['#title'])));
     }
   }

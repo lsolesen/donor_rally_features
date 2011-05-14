@@ -17,7 +17,7 @@ define('DONOR_RALLY_CONTENT_PROFILE_TYPE', 'team');
  */
 function dr_base_menu() {
   $items = array();
-  $items['admin/settings/dr-base'] = array(
+  $items['admin/config/dr-base'] = array(
     'title' => 'Donor Rally',
     'description' => 'Global settings for Donor Rally',
     'page callback' => 'drupal_get_form',
@@ -27,7 +27,7 @@ function dr_base_menu() {
     'file' => 'dr_base.admin.inc',
   );
 
-  $items['admin/settings/dr-base/global'] = array(
+  $items['admin/config/dr-base/global'] = array(
     'title' => 'Global settings',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10,
@@ -37,10 +37,15 @@ function dr_base_menu() {
 }
 
 /**
- * Implements hook_perm().
+ * Implements hook_permission().
  */
-function dr_base_perm() {
-  return array('administer donor rally');
+function dr_base_permission() {
+  return array(
+    'administer donor rally' => array(
+      'title' => t('administer donor rally'),
+      'description' => t('TODO Add a description for \'administer donor rally\''),
+    ),
+  );
 }
 
 /**
@@ -48,7 +53,7 @@ function dr_base_perm() {
  */
 function dr_base_theme($existing, $type, $theme, $path) {
   $base = array(
-    'arguments' => array('vars' => array())
+    'arguments' => array('vars' => array()),
   );
   return array(
     'dr_base_thermometer' => array(
@@ -78,8 +83,8 @@ function dr_base_profile_alter(&$account) {
     $account->content['dr-base-team-info']['link'] = array(
       '#type' => 'user_profile_item',
       '#title' => t('Team Page link&mdash;give this to your team'),
-      '#value' => '<span class="dr-base-raw-url">'.
-        url('node/'. $node->nid, array('absolute' => TRUE)) .
+      '#value' => '<span class="dr-base-raw-url">' .
+        url('node/' . $node->nid, array('absolute' => TRUE)) .
         '</span>',
     );
     unset($account->content['summary']);
@@ -98,9 +103,9 @@ function dr_base_cron() {
  * gateway and recalculating totals.
  */
 function dr_base_refresh_all() {
-  $cash_scale = (float)variable_get('dr_base_cash_scale', 1.0);
-  $food_scale = (float)variable_get('dr_base_food_scale', 1.0);
-  $volunteer_scale = (float)variable_get('dr_base_volunteer_scale', 1.0);
+  $cash_scale = (float) variable_get('dr_base_cash_scale', 1.0);
+  $food_scale = (float) variable_get('dr_base_food_scale', 1.0);
+  $volunteer_scale = (float) variable_get('dr_base_volunteer_scale', 1.0);
 
   $current_all = _dr_base_fetch_current_team_stats();
   foreach ($current_all as $nid => $now) {
@@ -115,6 +120,7 @@ function dr_base_refresh_all() {
     }
     // @TODO, abstract this out to exclude food and volunteer hours
     // unless the in-kind module/feature is enabled.
+    // TODO Please convert this statement to the D7 database API syntax.
     db_query(
       'UPDATE {' . _dr_base_get_team_table() . '} SET ' .
         'field_cash_value = %f, ' .
@@ -122,12 +128,28 @@ function dr_base_refresh_all() {
         'field_points_per_capita_value = ((%f+%f)*%f + (%f+%f)*%f + (%f+%f)*%f) / %d ' .
       'WHERE nid = %d',
       array(
-        $now['cash'],
-        $now['cash'], $now['field_offline_cash_value'], $cash_scale, $now['food'], $now['offline_food'], $food_scale, $now['volunteer'], $now['offline_volunteer'], $volunteer_scale,
-        $now['cash'], $now['field_offline_cash_value'], $cash_scale, $now['food'], $now['offline_food'], $food_scale, $now['volunteer'], $now['offline_volunteer'], $volunteer_scale,
-        $now['field_size_value'],
-        $nid
-      )
+      $now['cash'],
+      $now['cash'],
+      $now['field_offline_cash_value'],
+      $cash_scale,
+      $now['food'],
+      $now['offline_food'],
+      $food_scale,
+      $now['volunteer'],
+      $now['offline_volunteer'],
+      $volunteer_scale,
+      $now['cash'],
+      $now['field_offline_cash_value'],
+      $cash_scale,
+      $now['food'],
+      $now['offline_food'],
+      $food_scale,
+      $now['volunteer'],
+      $now['offline_volunteer'],
+      $volunteer_scale,
+      $now['field_size_value'],
+      $nid,
+    )
     );
   }
   drupal_flush_all_caches();
@@ -138,6 +160,7 @@ function dr_base_refresh_all() {
  * teams (from the database).
  */
 function _dr_base_fetch_current_team_stats() {
+  // TODO Please convert this statement to the D7 database API syntax.
   $result = db_query('SELECT * FROM {' . _dr_base_get_team_table() . '}');
 
   $team_stats = array();
@@ -173,7 +196,7 @@ function _dr_base_set_debug_aliases() {
 
   // Find all team node ids and assign nids to each entry in $team_names.
   $team_aliases = array();
-  $result = db_query("SELECT nid, title FROM {node} WHERE type = 'team'");
+  $result = db_query("SELECT nid, title FROM {node} WHERE type = :type", array(':type' => 'team'));
   $i = 0;
   while ($node = db_fetch_object($result)) {
     if (!isset($team_names[$i])) {
@@ -195,7 +218,7 @@ function _dr_base_format_value($value) {
 }
 
 /**
- * Implementation of hook_donor_rally_team_stat_categories().
+ * Implements hook_donor_rally_team_stat_categories().
  */
 function dr_base_donor_rally_team_stat_categories() {
   return array(
@@ -208,7 +231,7 @@ function dr_base_donor_rally_team_stat_categories() {
 }
 
 /**
- * Implementation of hook_donor_rally_point_scales().
+ * Implements hook_donor_rally_point_scales().
  */
 function dr_base_donor_rally_point_scales() {
   return array(
@@ -230,16 +253,16 @@ function dr_base_team_stats($node) {
     $label = $info['label'];
 
     // Raw values (USD, pounds, shifts, etc.); points (scaled raw).
-    $stats[$type .'_raw'] = $node->{'field_'. $type}[0]['value'] + $node->{'field_offline_' .$type}[0]['value'];
-    $stats[$type .'_raw_goal'] = $node->{'field_'. $type .'_goal'}[0]['value'];
+    $stats[$type . '_raw'] = $node->{'field_' . $type}[0]['value'] + $node->{'field_offline_' . $type}[0]['value'];
+    $stats[$type . '_raw_goal'] = $node->{'field_' . $type . '_goal'}[0]['value'];
 
     // Points values.
-    $stats[$type] = $stats[$type .'_raw'] * $point_scales[$type];
-    $stats[$type .'_goal'] = $stats[$type .'_raw_goal'] * $point_scales[$type];
+    $stats[$type] = $stats[$type . '_raw'] * $point_scales[$type];
+    $stats[$type . '_goal'] = $stats[$type . '_raw_goal'] * $point_scales[$type];
 
     // Totals.
     $stats['total_raw'] += $stats[$type];
-    $stats['total_raw_goal'] += $stats[$type .'_goal'];
+    $stats['total_raw_goal'] += $stats[$type . '_goal'];
 
     // Labels.
     $stats[$type . '_label'] = $label;
@@ -248,11 +271,11 @@ function dr_base_team_stats($node) {
   // Provide a formatted version as well.
   foreach ($stats as $k => $v) {
     if (strpos($k, '_label') === FALSE) {
-      $stats[$k .'_view'] = _dr_base_format_value($v);
+      $stats[$k . '_view'] = _dr_base_format_value($v);
     }
   }
 
-  $stats['per_capita'] = $stats['total'] / $node->field_size[0]['value']; 
+  $stats['per_capita'] = $stats['total'] / $node->field_size[0]['value'];
   return $stats;
 }
 
@@ -261,113 +284,128 @@ function dr_base_team_stats($node) {
  */
 function dr_base_init() {
   /* We need our css occasionally on pages without our blocks on 'em...so just include it always */
-  drupal_add_css(drupal_get_path('module', 'dr_base') .'/dr-base.css', 'module');
+  drupal_add_css(drupal_get_path('module', 'dr_base') . '/dr-base.css');
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function dr_base_block_info() {
+  return array(
+    0 => array(
+      'info' => t('Team Progress Thermometer'),
+      'cache' => BLOCK_NO_CACHE,
+    ),
+    1 => array(
+      'info' => t('Donate Button'),
+      'cache' => BLOCK_CACHE_PER_PAGE,
+    ),
+    2 => array(
+      'info' => t('Leaderboard Button'),
+      'cache' => BLOCK_CACHE_GLOBAL,
+    ),
+    3 => array(
+      'info' => t('Team Progress Statistics'),
+      'cache' => BLOCK_NO_CACHE,
+    ),
+    4 => array(
+      'info' => t('Team Page Button'),
+      'cache' => BLOCK_CACHE_PER_PAGE,
+    ),
+    5 => array(
+      'info' => t('New Team Blog Post'),
+      'cache' => BLOCK_CACHE_PER_PAGE,
+    ),
+    6 => array(
+      'info' => t('Team Coordinator Log in Button'),
+      'cache' => BLOCK_CACHE_GLOBAL,
+    ),
+    7 => array(
+      'info' => t('Team Coordinator Dashboard Button'),
+      'cache' => BLOCK_NO_CACHE,
+    ),
+    'site_thermometer' => array(
+      'info' => t('Site-wide total/goal thermometer'),
+      'cache' => BLOCK_CACHE_GLOBAL,
+    ),
+    'team_links' => array(
+      'info' => t('Donor Rally Team/Account links'),
+      'cache' => BLOCK_CACHE_PER_USER,
+    ),
+  );
+}
+
+/**
+ * Implements hook_block_configure().
+ */
+function dr_base_block_configure($delta) {
+  return array();
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function dr_base_block_view($delta) {
+  if ($delta === 'site_thermometer') {
+    return array(
+      'subject' => '',
+      'content' => _dr_base_block_site_thermometer(),
+    );
+  }
+  elseif ($delta === 'team_links') {
+    return array(
+      'subject' => '',
+      'content' => _dr_base_block_team_links(),
+    );
+  }
+
+  if (!$node) {
+    $node = menu_get_object();
+    if ($node && $node->type != DONOR_RALLY_CONTENT_PROFILE_TYPE) {
+      $node = NULL;
+    }
+  }
+
+  $vars = array();
+  if ($node) {
+    $vars = dr_base_team_stats($node);
+    $vars['node'] = $node;
+  }
+
+  if ($delta === 1 ) {
+    // Allow payment gateway to set the button.
+    $button = module_invoke(variable_get('dr_base_payment_gateway', 'dr_base_salsa'), 'donor_rally_donate_button', $vars);
+    return array(
+      'subject' => '',
+      'content' => $button,
+    );
+  }
+
+  $theme_functions = array(
+    0 => 'dr_base_thermometer',
+    2 => 'dr_base_team_leaderboard_button',
+    3 => 'dr_base_team_progress_stats',
+    4 => 'dr_base_team_page_button',
+    5 => 'dr_base_new_blog_post_button',
+    6 => 'dr_base_team_coordinator_login_button',
+    7 => 'dr_base_team_coordinator_account_button',
+  );
+  if (isset($theme_functions[$delta])) {
+    // TODO Please change this theme call to use an associative array for the $variables parameter.
+    return array('subject' => '', 'content' => theme($theme_functions[$delta], $vars));
+  }
 }
 
 /**
  * Implements hook_block().
  */
-function dr_base_block($op = 'list', $delta = 0, $edit = array()) {
-  switch ($op) {
-    case 'list':
-     return array(
-       0 => array(
-         'info' => t('Team Progress Thermometer'),
-         'cache' => BLOCK_NO_CACHE,
-       ),
-       1 => array(
-         'info' => t('Donate Button'),
-         'cache' => BLOCK_CACHE_PER_PAGE,
-       ),
-       2 => array(
-         'info' => t('Leaderboard Button'),
-         'cache' => BLOCK_CACHE_GLOBAL,
-       ),
-       3 => array(
-         'info' => t('Team Progress Statistics'),
-         'cache' => BLOCK_NO_CACHE,
-       ),
-       4 => array(
-         'info' => t('Team Page Button'),
-         'cache' => BLOCK_CACHE_PER_PAGE,
-       ),
-       5 => array(
-         'info' => t('New Team Blog Post'),
-         'cache' => BLOCK_CACHE_PER_PAGE,
-       ),
-       6 => array(
-         'info' => t('Team Coordinator Log in Button'),
-         'cache' => BLOCK_CACHE_GLOBAL,
-       ),
-       7 => array(
-         'info' => t('Team Coordinator Dashboard Button'),
-         'cache' => BLOCK_NO_CACHE,
-       ),
-       'site_thermometer' => array(
-         'info' => t('Site-wide total/goal thermometer'),
-         'cache' => BLOCK_CACHE_GLOBAL,
-       ),
-       'team_links' => array(
-         'info' => t('Donor Rally Team/Account links'),
-         'cache' => BLOCK_CACHE_PER_USER,
-       ),
-     );
-    case 'configure':
-      return array();
-    case 'view':
-      if ($delta === 'site_thermometer') {
-        return array(
-          'subject' => '',
-          'content' => _dr_base_block_site_thermometer(),
-        );
-      }
-      elseif ($delta === 'team_links') {
-        return array(
-          'subject' => '',
-          'content' => _dr_base_block_team_links(),
-        );
-      }
-
-      if (!$node) {
-        $node = menu_get_object();
-        if ($node && $node->type != DONOR_RALLY_CONTENT_PROFILE_TYPE) {
-          $node = NULL;
-        }
-      }
-
-      $vars = array();
-      if ($node) {
-        $vars = dr_base_team_stats($node);
-        $vars['node'] = $node;
-      }
-
-      if ($delta === 1 ) {
-        // Allow payment gateway to set the button.
-        $button = module_invoke(variable_get('dr_base_payment_gateway', 'dr_base_salsa'), 'donor_rally_donate_button', $vars);
-        return array(
-          'subject' => '',
-          'content' => $button,
-        );
-      }
-      
-      $theme_functions = array(
-        0 => 'dr_base_thermometer',
-        2 => 'dr_base_team_leaderboard_button',
-        3 => 'dr_base_team_progress_stats',
-        4 => 'dr_base_team_page_button',
-        5 => 'dr_base_new_blog_post_button',
-        6 => 'dr_base_team_coordinator_login_button',
-        7 => 'dr_base_team_coordinator_account_button',
-      );
-      if (isset($theme_functions[$delta])) {
-        return array('subject' => '', 'content' => theme($theme_functions[$delta], $vars));
-      }
-  }
+function dr_base_block_OLD($op = 'list', $delta = 0, $edit = array()) {
+  // TODO Remaining code in this function needs to be moved to the appropriate new hook function.
   return array('subject' => '', 'content' => '');
 }
 
 /**
- * Implementation of hook_views_api().
+ * Implements hook_views_api().
  */
 function dr_base_views_api() {
   return array(
@@ -387,7 +425,7 @@ function dr_base_preprocess_views_view(&$vars) {
         foreach (array_filter($handler->options['value']) as $type) {
           $item = menu_get_item('node/add/' . strtr($type, array('_' => '-')));
           if ($item && $item['access']) {
-            $output = t('Please <a href="!url">add your first @type</a> to get started.', array('@type' => node_get_types('name', $type), '!url' => url('node/add/' . strtr($type, array('_' => '-')))));
+            $output = t('Please <a href="!url">add your first @type</a> to get started.', array('@type' => node_type_get_name($type), '!url' => url('node/add/' . strtr($type, array('_' => '-')))));
           }
         }
         break;
@@ -415,7 +453,7 @@ function template_preprocess_dr_base_thermometer(&$variables) {
   $vars['complete'] = $vars['total_raw'] / $vars['total_raw_goal'];
   $vars['success'] = $vars['complete'] >= 1.0;
 
-  $vars['filled_height'] = (int)($total_height * min(1.0, $vars['complete']) + 0.5);
+  $vars['filled_height'] = (int) ($total_height * min(1.0, $vars['complete']) + 0.5);
   $vars['empty_height'] = $total_height - $vars['filled_height'];
 
   if (!$vars['success']) {
@@ -429,7 +467,7 @@ function template_preprocess_dr_base_thermometer(&$variables) {
   $vars['filled_bottom_top'] = $vars['filled_middle_top'] + $vars['filled_height'];
 
   $vars['goal_top'] = $top_margin + $top_halfheight - $font_halfheight;
-  $vars['points_top'] = max($vars['goal_top'] + $font_halfheight*2, $vars['goal_top'] + $vars['empty_height']);
+  $vars['points_top'] = max($vars['goal_top'] + $font_halfheight * 2, $vars['goal_top'] + $vars['empty_height']);
   $variables += $vars;
 }
 
@@ -449,13 +487,14 @@ function dr_base_preprocess_dr_base_team_progress_stats(&$variables) {
  * Helper that constructs button markup.
  */
 function dr_base_theme_button($class, $text, $link, $attr = array()) {
-  return l($text, $link, array('html' => TRUE, 'attributes' => array('class' => 'dr-base-button '.$class) + $attr));
+  return l($text, $link, array('html' => TRUE, 'attributes' => array('class' => 'dr-base-button ' . $class) + $attr));
 }
 
 /**
  * Theme the "leaderboard" button block
  */
-function theme_dr_base_team_leaderboard_button($vars) {
+function theme_dr_base_team_leaderboard_button($variables) {
+  $vars = $variables['vars'];
   return dr_base_theme_button(
     'dr-base-leaderboard-button',
     t('Team Ranking'),
@@ -466,20 +505,22 @@ function theme_dr_base_team_leaderboard_button($vars) {
 /**
  * Theme the "team page" button block
  */
-function theme_dr_base_team_page_button($vars) {
+function theme_dr_base_team_page_button($variables) {
+  $vars = $variables['vars'];
   return dr_base_theme_button(
     'dr-base-team-page-button',
     t('Team Page'),
-    'node/'. $vars['node']->nid
+    'node/' . $vars['node']->nid
   );
 }
 
 /**
  * Theme the "new blog post" button block
  */
-function theme_dr_base_new_blog_post_button($vars) {
+function theme_dr_base_new_blog_post_button($variables) {
+  $vars = $variables['vars'];
   if (user_access('create team_blog_post content')) {
-    return '<div class="dr-base-new-blog-post-button">'.
+    return '<div class="dr-base-new-blog-post-button">' .
       l(t('Write a new blog post'), 'node/add/team-blog-post') .
       '</div>';
   }
@@ -489,7 +530,8 @@ function theme_dr_base_new_blog_post_button($vars) {
 /**
  * Theme the "Team coordinator login" button block
  */
-function theme_dr_base_team_coordinator_login_button($vars) {
+function theme_dr_base_team_coordinator_login_button($variables) {
+  $vars = $variables['vars'];
   global $user;
   if ($user->uid != 0) {
     return;
@@ -505,7 +547,8 @@ function theme_dr_base_team_coordinator_login_button($vars) {
 /**
  * Theme the "Team coordinator account/dashboard" button block
  */
-function theme_dr_base_team_coordinator_account_button($vars) {
+function theme_dr_base_team_coordinator_account_button($variables) {
+  $vars = $variables['vars'];
   global $user;
   if (!isset($vars['node']) || $vars['node']->uid != $user->uid) {
     return;
@@ -529,8 +572,8 @@ function _dr_base_block_site_thermometer() {
   $vars['total_raw_goal_view'] = _dr_base_format_value($goal);
   $vars['total_raw_view'] = _dr_base_format_value($total);
 
-  $vars['edit_link'] = user_access('administer donor rally') ? l('Change campaign goal', 'admin/settings/dr-base', array('query' => drupal_get_destination())) : '';
-  return theme('dr_base_thermometer', $vars);
+  $vars['edit_link'] = user_access('administer donor rally') ? l('Change campaign goal', 'admin/config/dr-base', array('query' => drupal_get_destination())) : '';
+  return theme('dr_base_thermometer', array('vars' => $vars));
 }
 
 /**
@@ -547,7 +590,8 @@ function _dr_base_get_total_goal() {
     $db_info = content_database_info($field);
     $table = $db_info['table'];
     $column = $db_info['columns']['value']['column'];
-    $goal += db_result(db_query("SELECT SUM(" . $column . ") FROM {" . $table . "}"));
+    // TODO Please convert this statement to the D7 database API syntax.
+    $goal += db_query("SELECT SUM(" . $column . ") FROM {" . $table . "}")->fetchField();
   }
   return $goal;
 }
@@ -560,7 +604,8 @@ function _dr_base_get_total_points() {
   $db_info = content_database_info($field);
   $table = $db_info['table'];
   $column = $db_info['columns']['value']['column'];
-  return db_result(db_query("SELECT SUM(" . $column . ") FROM {" . $table . "}"));
+  // TODO Please convert this statement to the D7 database API syntax.
+  return db_query("SELECT SUM(" . $column . ") FROM {" . $table . "}")->fetchField();
 }
 
 /**
@@ -597,5 +642,5 @@ function _dr_base_block_team_links() {
     );
   }
   drupal_alter('dr_base_team_links', $links);
-  return theme('links', $links);
+  return theme('links', array('links' => $links));
 }

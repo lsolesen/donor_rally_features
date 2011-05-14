@@ -15,3 +15,12 @@ php = "5.0"
 project = "donor_rally_features"
 project status url = "http://code.opensourcery.com/fserver"
 version = "6.x-1.0-alpha1"
+
+files[] = dr-base-team-progress-stats.tpl.php
+files[] = dr-base-thermometer.tpl.php
+files[] = dr_base.admin.inc
+files[] = dr_base.context.inc
+files[] = dr_base.features.inc
+files[] = dr_base.install
+files[] = dr_base.module
+files[] = dr_base.strongarm.inc

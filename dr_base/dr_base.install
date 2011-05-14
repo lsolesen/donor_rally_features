@@ -8,7 +8,7 @@
  */
 
 /**
- * Implementation of hook_requirements().
+ * Implements hook_requirements().
  */
 function dr_base_requirements($phase) {
   $requirements = array();
@@ -21,7 +21,7 @@ function dr_base_requirements($phase) {
       $requirements['dr_base_payment_gateway'] = array(
         'title' => $t('Donor Rally payment gateway'),
         'value' => $t('No payment gateways enabled'),
-        'description' => $t('No payment gateways found. Payment gateways can be enabled on the <a href="!url">modules page</a>.', array('!url' => url('admin/build/modules'))),
+        'description' => $t('No payment gateways found. Payment gateways can be enabled on the <a href="!url">modules page</a>.', array('!url' => url('admin/modules'))),
         'severity' => REQUIREMENT_ERROR,
       );
     }
