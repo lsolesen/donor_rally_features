@@ -26,11 +26,6 @@ function dr_campaign_block_view($delta) {
 }
 
 /**
- * Implements hook_block().
- */
-function dr_campaign_block_OLD($op = 'view', $delta = 0, $edit = array()) { }
-
-/**
  * Get a campaign's total goal.
  *
  * @param $node
