@@ -5,7 +5,7 @@
  */
 
 /**
- * Implementation of hook_spaces_presets().
+ * Implements hook_spaces_presets().
  */
 function dr_campaign_spaces_presets() {
   $export = array();

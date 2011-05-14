@@ -1,4 +1,4 @@
-core = "7.x"
+core = 7.x
 dependencies[] = "context"
 dependencies[] = "dr_base"
 dependencies[] = "features"
@@ -46,3 +46,14 @@ package = "Features"
 php = "5.2.4"
 spaces[types][] = "og"
 spaces[types][] = "site"
+
+files[] = dr_campaign.block.inc
+files[] = dr_campaign.context.inc
+files[] = dr_campaign.features.content.inc
+files[] = dr_campaign.features.field.inc
+files[] = dr_campaign.features.inc
+files[] = dr_campaign.features.user_permission.inc
+files[] = dr_campaign.module
+files[] = dr_campaign.spaces.inc
+files[] = dr_campaign.strongarm.inc
+files[] = dr_campaign.views_default.inc

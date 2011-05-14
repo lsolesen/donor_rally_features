@@ -5,7 +5,7 @@
  */
 
 /**
- * Implementation of hook_user_default_permissions().
+ * Implements hook_user_default_permissions().
  */
 function dr_campaign_user_default_permissions() {
   $permissions = array();

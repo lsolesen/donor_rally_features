@@ -3,26 +3,32 @@
  * @file
  * Donor Rally Campaign feature.
  */
-include_once('dr_campaign.features.inc');
+include_once DRUPAL_ROOT . '/' . 'dr_campaign.features.inc';
 
 /**
- * Implementation of hook_block().
+ * Implements hook_block_info().
  */
-function dr_campaign_block($op = 'view', $delta = 0, $edit = array()) {
-  switch ($op) {
-    case 'list':
-      $blocks['campaign_thermometer']['info'] = t('Campaign thermometer');
-      $blocks['campaign_thermometer']['cache'] = BLOCK_NO_CACHE;
-      return $blocks;
+function dr_campaign_block_info() {
+  $blocks['campaign_thermometer']['info'] = t('Campaign thermometer');
+  $blocks['campaign_thermometer']['cache'] = BLOCK_NO_CACHE;
+  return $blocks;
+}
 
-    case 'view':
-      module_load_include('inc', 'dr_campaign', 'dr_campaign.block');
-      $function = '_dr_campaign_block_' . $delta;
-      if (function_exists($function)) {
-        return $function();
-      }
+/**
+ * Implements hook_block_view().
+ */
+function dr_campaign_block_view($delta) {
+  module_load_include('inc', 'dr_campaign', 'dr_campaign.block');
+  $function = '_dr_campaign_block_' . $delta;
+  if (function_exists($function)) {
+    return $function();
   }
 }
+
+/**
+ * Implements hook_block().
+ */
+function dr_campaign_block_OLD($op = 'view', $delta = 0, $edit = array()) { }
 
 /**
  * Get a campaign's total goal.
