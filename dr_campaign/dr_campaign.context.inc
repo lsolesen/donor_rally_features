@@ -20,6 +20,12 @@ function dr_campaign_context_default_contexts() {
   $context->reactions = array(
     'block' => array(
       'blocks' => array(
+        'dr_base-welcome' => array(
+          'module' => 'dr_base',
+          'delta' => 'welcome',
+          'region' => 'content',
+          'weight' => 0,
+        ),
         'views-dr_campaign-active_campaigns' => array(
           'module' => 'views',
           'delta' => 'dr_campaign-active_campaigns',
