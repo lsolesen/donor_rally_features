@@ -72,6 +72,27 @@ function dr_base_init() {
 }
 
 /**
+ * Implements hook_block_info().
+ */
+function dr_base_block_info () {
+  $blocks['welcome'] = array(
+    'info' => t('Donor Rally Welcome'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function dr_base_block_view($delta = '') {
+  module_load_include('inc', 'dr_base', 'dr_base.block');
+  $function = '_dr_base_block_' . $delta;
+  if (function_exists($function)) {
+    return $function();
+  }
+}
+
+/**
  * Preprocessor for theme('views_view').
  */
 function dr_base_preprocess_views_view(&$vars) {

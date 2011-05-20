@@ -27,6 +27,12 @@ function dr_base_context_default_contexts() {
   $context->reactions = array(
     'block' => array(
       'blocks' => array(
+        'dr_base-welcome' => array(
+          'module' => 'dr_base',
+          'delta' => 'welcome',
+          'region' => 'content',
+          'weight' => -42,
+        ),
         'spaces_dashboard-editor' => array(
           'module' => 'spaces_dashboard',
           'delta' => 'editor',
