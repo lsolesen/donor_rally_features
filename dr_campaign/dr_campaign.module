@@ -3,7 +3,7 @@
  * @file
  * Donor Rally Campaign feature.
  */
-include_once DRUPAL_ROOT . '/' . 'dr_campaign.features.inc';
+include_once('dr_campaign.features.inc');
 
 /**
  * Implements hook_block_info().
