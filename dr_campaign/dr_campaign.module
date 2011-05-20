@@ -10,7 +10,7 @@ include_once('dr_campaign.features.inc');
  */
 function dr_campaign_block_info() {
   $blocks['campaign_thermometer']['info'] = t('Campaign thermometer');
-  $blocks['campaign_thermometer']['cache'] = BLOCK_NO_CACHE;
+  $blocks['campaign_thermometer']['cache'] = DRUPAL_NO_CACHE;
   return $blocks;
 }
 
