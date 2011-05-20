@@ -43,7 +43,7 @@ function dr_base_permission() {
   return array(
     'administer donor rally' => array(
       'title' => t('administer donor rally'),
-      'description' => t('TODO Add a description for \'administer donor rally\''),
+      'description' => t('Administer Donor Rally configuration.'),
     ),
   );
 }
