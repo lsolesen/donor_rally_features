@@ -59,7 +59,13 @@ function dr_base_theme($existing, $type, $theme, $path) {
   return array(
     'dr_base_thermometer' => array(
       'template' => 'dr-base-thermometer',
-    ) + $base,
+      'arguments' => array('vars' => array()),
+    ),
+    'dr_base_welcome' => array(
+      'template' => 'dr-base-welcome',
+      'arguments' => array('video' => '', 'links' => array(), 'admin' => ''),
+      'path' => drupal_get_path('module', 'dr_base') . '/theme',
+    ),
   );
 }
 
@@ -89,6 +95,15 @@ function dr_base_block_view($delta = '') {
   $function = '_dr_base_block_' . $delta;
   if (function_exists($function)) {
     return $function();
+  }
+}
+
+/**
+ * Preprocessor for theme('dr_base_welcome').
+ */
+function template_preprocess_dr_base_welcome(&$vars) {
+  if (!empty($vars['links'])) {
+    $vars['columns'] = array_chunk($vars['links'], ceil(count($vars['links']) / 2));
   }
 }
 
