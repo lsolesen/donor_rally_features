@@ -64,27 +64,6 @@ function dr_base_theme($existing, $type, $theme, $path) {
 }
 
 /**
- * Implements hook_profile_alter().
- */
-function dr_base_profile_alter(&$account) {
-  if ($node = content_profile_load(DONOR_RALLY_CONTENT_PROFILE_TYPE, $account->uid)) {
-    $account->content['dr-base-team-info'] = array(
-      '#type' => 'user_profile_category',
-      '#title' => t('Team information'),
-      '#attributes' => array('class' => 'dr-base-profile-team-info'),
-    );
-    $account->content['dr-base-team-info']['link'] = array(
-      '#type' => 'user_profile_item',
-      '#title' => t('Team Page link&mdash;give this to your team'),
-      '#value' => '<span class="dr-base-raw-url">' .
-        url('node/' . $node->nid, array('absolute' => TRUE)) .
-        '</span>',
-    );
-    unset($account->content['summary']);
-  }
-}
-
-/**
  * Implements hook_init().
  */
 function dr_base_init() {
