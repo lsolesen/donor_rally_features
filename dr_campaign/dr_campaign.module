@@ -32,7 +32,8 @@ function dr_campaign_block_view($delta) {
  *   Campaign node object.
  */
 function dr_campaign_get_goal($node) {
-  return $node->field_campaign_goal[0]['value'];
+  $items = field_get_items('node', $node, 'field_campaign_goal');
+  return $items[0]['value'];
 }
 
 /**

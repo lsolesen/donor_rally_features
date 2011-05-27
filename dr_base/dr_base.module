@@ -60,6 +60,7 @@ function dr_base_theme($existing, $type, $theme, $path) {
     'dr_base_thermometer' => array(
       'template' => 'dr-base-thermometer',
       'arguments' => array('vars' => array()),
+      'path' => drupal_get_path('module', 'dr_base') . '/theme',
     ),
     'dr_base_welcome' => array(
       'template' => 'dr-base-welcome',
